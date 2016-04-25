@@ -10,22 +10,23 @@ public class PlatformManager : MonoBehaviour
     public Vector3 startPosition;
     public Vector3 minSize, maxSize, minGap, maxGap;
     public float minY, maxY;
+    public Material[] materials;
+    public PhysicMaterial[] pyhysicsMaterials;
 
     private Vector3 nextPosition;
     private Queue<Transform> objectQueue;
 
     void Start()
     {
+        GameEventManager.GameStart += GameStart;
+        GameEventManager.GameOver += GameOver;
         objectQueue = new Queue<Transform>(numberOfObjects);
         for (int i = 0; i < numberOfObjects; i++)
         {
-            objectQueue.Enqueue((Transform)Instantiate(prefab));
+            objectQueue.Enqueue((Transform)Instantiate(
+                prefab, new Vector3(0f, 0f, 0f), Quaternion.identity));
         }
-        nextPosition = startPosition;
-        for (int i = 0; i < numberOfObjects; i++)
-        {
-            Recycle();
-        }
+        enabled = false;
     }
 
     void Update()
@@ -50,6 +51,9 @@ public class PlatformManager : MonoBehaviour
         Transform o = objectQueue.Dequeue();
         o.localScale = scale;
         o.localPosition = position;
+        int materialIndex = Random.Range(0, materials.Length);
+        o.GetComponent<Renderer>().material = materials[materialIndex];
+        o.GetComponent<Collider>().material = pyhysicsMaterials[materialIndex];
         objectQueue.Enqueue(o);
 
         nextPosition += new Vector3(
@@ -65,5 +69,20 @@ public class PlatformManager : MonoBehaviour
         {
             nextPosition.y = maxY - maxGap.y;
         }
+    }
+
+    private void GameStart()
+    {
+        nextPosition = startPosition;
+        for (int i = 0; i < numberOfObjects; i++)
+        {
+            Recycle();
+        }
+        enabled = true;
+    }
+
+    private void GameOver()
+    {
+        enabled = false;
     }
 }

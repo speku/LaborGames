@@ -1,18 +1,74 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Runner : MonoBehaviour {
+public class Runner : MonoBehaviour
+{
 
     public static float distanceTraveled;
+    private Vector3 startPosition;
+    public float gameOverY;
 
-	// Use this for initialization
-	void Start () {
-	    
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        transform.Translate(5f * Time.deltaTime, 0f, 0f);
+    public float acceleration;
+    public Vector3 jumpVelocity;
+
+    private bool touchingPlatform;
+
+
+    void Start()
+    {
+        GameEventManager.GameStart += GameStart;
+        GameEventManager.GameOver += GameOver;
+        startPosition = transform.localPosition;
+        GetComponent<Renderer>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+        enabled = false;
+    }
+
+    private void GameStart()
+    {
+        distanceTraveled = 0f;
+        transform.localPosition = startPosition;
+        GetComponent<Renderer>().enabled = true;
+        GetComponent<Rigidbody>().isKinematic = false;
+        enabled = true;
+    }
+
+    private void GameOver()
+    {
+        GetComponent<Renderer>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+        enabled = false;
+    }
+
+    void Update()
+    {
+        if(touchingPlatform && Input.GetButtonDown("Jump"))
+        {
+            GetComponent<Rigidbody>().AddForce(jumpVelocity, ForceMode.VelocityChange);
+            touchingPlatform = false;
+        }
         distanceTraveled = transform.localPosition.x;
-	}
+
+        if (transform.localPosition.y < gameOverY)
+        {
+            GameEventManager.TriggerGameOver();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (touchingPlatform)
+        {
+            GetComponent<Rigidbody>().AddForce(acceleration, 0f, 0f, ForceMode.Acceleration);
+        }
+    }
+
+    void OnCollisionEnter()
+    {
+        touchingPlatform = true;
+    }
+
+    void OnCollisionExit()
+    {
+        touchingPlatform = false;
+    }
 }
