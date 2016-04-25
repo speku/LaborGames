@@ -8,7 +8,7 @@ public class Runner : MonoBehaviour
     public float gameOverY;
 
     public float acceleration;
-    public Vector3 jumpVelocity;
+    public Vector3 jumpVelocity, boostVelocity;
 
     private bool touchingPlatform;
 
@@ -23,13 +23,21 @@ public class Runner : MonoBehaviour
         enabled = false;
     }
 
+    private static int boosts;
+
     private void GameStart()
     {
+        boosts = 0;
         distanceTraveled = 0f;
         transform.localPosition = startPosition;
         GetComponent<Renderer>().enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
         enabled = true;
+    }
+
+    public static void AddBoost()
+    {
+        boosts += 1;
     }
 
     private void GameOver()
@@ -41,10 +49,18 @@ public class Runner : MonoBehaviour
 
     void Update()
     {
-        if(touchingPlatform && Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
-            GetComponent<Rigidbody>().AddForce(jumpVelocity, ForceMode.VelocityChange);
-            touchingPlatform = false;
+            if (touchingPlatform)
+            {
+                GetComponent<Rigidbody>().AddForce(jumpVelocity, ForceMode.VelocityChange);
+                touchingPlatform = false;
+            }
+            else if (boosts > 0)
+            {
+                GetComponent<Rigidbody>().AddForce(boostVelocity, ForceMode.VelocityChange);
+                boosts -= 1;
+            }
         }
         distanceTraveled = transform.localPosition.x;
 

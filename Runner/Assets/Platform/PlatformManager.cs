@@ -12,6 +12,7 @@ public class PlatformManager : MonoBehaviour
     public float minY, maxY;
     public Material[] materials;
     public PhysicMaterial[] pyhysicsMaterials;
+    public PowerUp powerUp;
 
     private Vector3 nextPosition;
     private Queue<Transform> objectQueue;
@@ -47,6 +48,9 @@ public class PlatformManager : MonoBehaviour
         Vector3 position = nextPosition;
         position.x += scale.x * 0.5f;
         position.y += scale.y * 0.5f;
+
+        powerUp.SpawnIfAvailable(position);
+        
 
         Transform o = objectQueue.Dequeue();
         o.localScale = scale;
