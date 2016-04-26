@@ -32,7 +32,7 @@ public class PlatformManager : MonoBehaviour
 
     void Update()
     {
-        if (objectQueue.Peek().localPosition.x + recycleOffset < Runner.distanceTraveled)
+        if (objectQueue.Peek().localPosition.x + recycleOffset < Camera.distanceTraveled)
         {
             Recycle();
         }

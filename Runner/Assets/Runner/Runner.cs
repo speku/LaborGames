@@ -3,9 +3,9 @@
 public class Runner : MonoBehaviour
 {
 
-    public static float distanceTraveled;
     private Vector3 startPosition;
     public float gameOverY;
+    public float cameraOffset; 
 
     public float acceleration;
     public Vector3 jumpVelocity, boostVelocity;
@@ -28,7 +28,6 @@ public class Runner : MonoBehaviour
     private void GameStart()
     {
         boosts = 0;
-        distanceTraveled = 0f;
         transform.localPosition = startPosition;
         GetComponent<Renderer>().enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
@@ -62,9 +61,9 @@ public class Runner : MonoBehaviour
                 boosts -= 1;
             }
         }
-        distanceTraveled = transform.localPosition.x;
 
-        if (transform.localPosition.y < gameOverY)
+
+        if (transform.localPosition.y < gameOverY || transform.localPosition.x + cameraOffset < Camera.distanceTraveled )
         {
             GameEventManager.TriggerGameOver();
         }

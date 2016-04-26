@@ -15,7 +15,7 @@ public class PowerUp : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (transform.localPosition.x + recycleOffset < Runner.distanceTraveled)
+        if (transform.localPosition.x + recycleOffset < Camera.distanceTraveled)
         {
             gameObject.SetActive(false);
             return;
