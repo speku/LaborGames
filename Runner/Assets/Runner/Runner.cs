@@ -5,7 +5,9 @@ public class Runner : MonoBehaviour
 
     private Vector3 startPosition;
     public float gameOverY;
-    public float cameraOffset; 
+    public float cameraOffset;
+
+    private InputManager inputManager;
 
     public float acceleration;
     public Vector3 jumpVelocity, boostVelocity;
@@ -15,6 +17,7 @@ public class Runner : MonoBehaviour
 
     void Start()
     {
+        inputManager = FindObjectOfType<InputManager>();
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
         startPosition = transform.localPosition;
@@ -48,7 +51,7 @@ public class Runner : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") || inputManager.WasTouch())
         {
             if (touchingPlatform)
             {
