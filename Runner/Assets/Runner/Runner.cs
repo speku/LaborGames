@@ -27,7 +27,7 @@ public class Runner : MonoBehaviour
         GetComponent<Renderer>().enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
         enabled = false;
-        GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0) * speed, ForceMode.VelocityChange);
+        
     }
 
     private static int boosts;
@@ -40,6 +40,7 @@ public class Runner : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = false;
         enabled = true;
         gameRunning = true;
+        GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0) * speed, ForceMode.VelocityChange);
     }
 
     public static void AddBoost()
@@ -53,6 +54,7 @@ public class Runner : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
         enabled = false;
         gameRunning = false;
+        GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
     }
 
     void Update()
