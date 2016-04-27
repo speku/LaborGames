@@ -14,6 +14,9 @@ public class Runner : MonoBehaviour
 
     private bool touchingPlatform;
 
+    public float speedIncrement = 0.001f;
+    public float speed;
+    private bool gameRunning = false;
 
     void Start()
     {
@@ -24,6 +27,7 @@ public class Runner : MonoBehaviour
         GetComponent<Renderer>().enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
         enabled = false;
+        GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0) * speed, ForceMode.VelocityChange);
     }
 
     private static int boosts;
@@ -35,6 +39,7 @@ public class Runner : MonoBehaviour
         GetComponent<Renderer>().enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
         enabled = true;
+        gameRunning = true;
     }
 
     public static void AddBoost()
@@ -47,6 +52,7 @@ public class Runner : MonoBehaviour
         GetComponent<Renderer>().enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
         enabled = false;
+        gameRunning = false;
     }
 
     void Update()
@@ -70,14 +76,17 @@ public class Runner : MonoBehaviour
         {
             GameEventManager.TriggerGameOver();
         }
+        if (gameRunning) GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0) * speedIncrement, ForceMode.VelocityChange);
+
+        if (transform.localPosition.x > Camera.distanceTraveled + cameraOffset) transform.localPosition = new Vector3(Camera.distanceTraveled + cameraOffset, transform.localPosition.y, transform.localPosition.z);
     }
 
     void FixedUpdate()
     {
-        if (touchingPlatform)
-        {
-            GetComponent<Rigidbody>().AddForce(acceleration, 0f, 0f, ForceMode.Acceleration);
-        }
+        //if (touchingPlatform)
+        //{
+        //    GetComponent<Rigidbody>().AddForce(acceleration, 0f, 0f, ForceMode.Acceleration);
+        //}
     }
 
     void OnCollisionEnter()

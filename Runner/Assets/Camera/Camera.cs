@@ -8,6 +8,7 @@ public class Camera : MonoBehaviour
     private Quaternion startRotation;
     private bool gameRunning = false;
 
+    public float speedIncrement = 0.001f;
     public float speed;
 
     void Start()
@@ -26,18 +27,21 @@ public class Camera : MonoBehaviour
         transform.localPosition = startPosition;
         transform.localRotation = startRotation;
         gameRunning = true;
+       GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0) * speed, ForceMode.VelocityChange);
     }
 
 
     private void GameOver()
     {
+        //GetComponent<Rigidbody>().AddForce(new Vector3(-1, 0, 0) * speed, ForceMode.VelocityChange);
         GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
         gameRunning = false;
     }
 
     void Update()
     {
-        if (gameRunning) transform.position += new Vector3(1,0,0) * speed * Time.deltaTime;
+        if (gameRunning) GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0) * speedIncrement, ForceMode.VelocityChange);
+        //transform.position += new Vector3(1,0,0) * speed * Time.deltaTime;
         distanceTraveled = transform.localPosition.x;
     }
 
